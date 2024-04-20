@@ -37,7 +37,35 @@ export const detailTodo = async (todoId: string, user: string) => {
 
 // update todos
 
+export const updateTodo = async (
+  todoId: string,
+  user: string,
+  input: Pick<Todo, "description" | "completed">
+) => {
+  const existingTodo = await detailTodo(todoId, user);
+  if (!existingTodo) return false;
+
+  const updatedTodos = todos.map((todo) => {
+    if (todo.id === existingTodo.id) {
+      return { ...todo, ...input };
+    }
+    return todo;
+  });
+  todos = updatedTodos;
+
+  return true;
+};
+
 // delete todos
+
+export const deleteTodo = async (todoId: string, user: string) => {
+  const existingTodo = await detailTodo(todoId, user);
+  if (!existingTodo) return false;
+
+  const updatedTodos = todos.filter((todo) => todo.id !== todoId);
+  todos = updatedTodos;
+  return true;
+};
 
 const generateId = () => {
   return new Date().getTime().toString();
